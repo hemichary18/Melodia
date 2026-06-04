@@ -4,7 +4,7 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useEffect, useRef, useState } from 'react';
 
 export const Player = () => {
-  const { currentSong, isPlaying, togglePlay, volume, setVolume, playSong } = usePlayerStore();
+  const { currentSong, isPlaying, togglePlay, volume, setVolume } = usePlayerStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
