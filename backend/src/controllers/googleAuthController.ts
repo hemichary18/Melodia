@@ -61,6 +61,10 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
       }) as any;
     }
 
+    if (!user) {
+      throw new Error('Failed to create or retrieve user');
+    }
+
     generateToken(res, user._id as any);
     
     res.status(200).json({
