@@ -31,8 +31,13 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
 
     const { sub: googleId, email, name, picture } = payload;
 
+    if (!email) {
+      res.status(400);
+      throw new Error('Google token did not provide an email');
+    }
+
     // Check if user already exists
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: email as string });
 
     if (user) {
       // User exists, but might have signed up with local provider initially
@@ -52,8 +57,8 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
         username: (name || 'user').replace(/\s+/g, '').toLowerCase() + Math.floor(Math.random() * 1000),
         googleId,
         authProvider: 'google',
-        profilePictureUrl: picture,
-      });
+        profilePictureUrl: picture || '',
+      }) as any;
     }
 
     generateToken(res, user._id as any);
