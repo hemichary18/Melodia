@@ -37,7 +37,7 @@ const seedData = async () => {
       image: 'https://images.unsplash.com/photo-1549834125-82d3c48159a3?q=80&w=400&h=400&fit=crop',
       verified: true,
       followers: 1500000,
-    });
+    }) as any;
 
     const daftPunk = await Artist.create({
       name: 'Daft Punk',
@@ -45,7 +45,7 @@ const seedData = async () => {
       image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400&h=400&fit=crop',
       verified: true,
       followers: 2000000,
-    });
+    }) as any;
 
     console.log('Creating albums...');
     const starboy = await Album.create({
@@ -53,14 +53,14 @@ const seedData = async () => {
       artist: theWeeknd._id,
       coverArtUrl: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400&h=400&fit=crop',
       releaseDate: new Date('2016-01-01')
-    });
+    }) as any;
 
     const discovery = await Album.create({
       title: 'Discovery',
       artist: daftPunk._id,
       coverArtUrl: 'https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=400&h=400&fit=crop',
       releaseDate: new Date('2001-01-01')
-    });
+    }) as any;
 
     console.log('Creating songs...');
     await Song.insertMany([
