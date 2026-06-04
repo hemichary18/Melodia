@@ -52,16 +52,14 @@ const seedData = async () => {
       title: 'Starboy',
       artist: theWeeknd._id,
       coverArtUrl: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400&h=400&fit=crop',
-      releaseYear: 2016,
-      genre: 'R&B'
+      releaseDate: new Date('2016-01-01')
     });
 
     const discovery = await Album.create({
       title: 'Discovery',
       artist: daftPunk._id,
       coverArtUrl: 'https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=400&h=400&fit=crop',
-      releaseYear: 2001,
-      genre: 'Electronic'
+      releaseDate: new Date('2001-01-01')
     });
 
     console.log('Creating songs...');

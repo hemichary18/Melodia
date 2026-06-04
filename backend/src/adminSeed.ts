@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
-import User from './models/User.js';
+import User, { UserRole } from './models/User.js';
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ const createAdmin = async () => {
       username: 'Hemant12',
       email: 'admin@melodia.app', // placeholder email
       passwordHash,
-      role: 'ADMIN',
+      role: UserRole.ADMIN,
       authProvider: 'local'
     });
 
