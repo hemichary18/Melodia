@@ -3,16 +3,22 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import { createServer } from 'http';
+import { initializeSocket } from './socket.js';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
 import artistRoutes from './routes/artistRoutes.js';
 import songRoutes from './routes/songRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import socialRoutes from './routes/socialRoutes.js';
+import playlistRoutes from './routes/playlistRoutes.js';
 
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
+initializeSocket(httpServer);
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -32,6 +38,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/artists', artistRoutes);
 app.use('/api/songs', songRoutes);
+app.use('/api/social', socialRoutes);
+app.use('/api/playlists', playlistRoutes);
 
 // Error Middleware
 app.use(notFound);
@@ -44,7 +52,7 @@ const connectDB = async () => {
     await mongoose.connect(mongoUri);
     console.log('MongoDB connected successfully');
     
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {

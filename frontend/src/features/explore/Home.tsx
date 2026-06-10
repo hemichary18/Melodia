@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiPlay, FiHeart } from 'react-icons/fi';
+import { FiPlay, FiHeart, FiSearch } from 'react-icons/fi';
 // ... (I'll need to do this carefully, let's view Home.tsx first)
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -10,7 +10,7 @@ import api from '../../services/api';
 
 export const Home = () => {
   const { user } = useAuthStore();
-  const playSong = usePlayerStore((state) => state.playSong);
+  const playQueue = usePlayerStore((state) => state.playQueue);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [songs, setSongs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,13 +45,32 @@ export const Home = () => {
   if (hour >= 5 && hour < 12) greeting = 'Good morning';
   else if (hour >= 12 && hour < 18) greeting = 'Good afternoon';
 
+  const mapToQueue = (apiSongs: any[]) => apiSongs.map(song => ({
+    id: song._id,
+    title: song.title,
+    artist: { name: song.artist?.name || 'Unknown Artist' },
+    coverArtUrl: song.coverImage || song.coverArtUrl,
+    audioUrl: song.audioUrl,
+    lyrics: song.lyrics
+  }));
+
   return (
-    <div className="p-8 pb-32">
-      <header className="flex items-center justify-between mb-12 sticky top-0 z-20 backdrop-blur-xl bg-background/50 -mx-8 px-8 py-4 border-b border-white/5">
-        <h2 className="text-3xl font-bold text-foreground tracking-tight">
-          {greeting}{user ? `, ${user.username}` : ''}
-        </h2>
-        <ProfileMenu onEditProfile={() => setIsEditProfileOpen(true)} />
+    <div className="p-4 md:p-8 pb-32 max-w-7xl mx-auto">
+      <header className="flex flex-col md:flex-row items-center justify-between gap-4 mb-12 sticky top-0 z-20 backdrop-blur-xl bg-background/80 -mx-4 md:-mx-8 px-4 md:px-8 py-4 border-b border-white/5">
+        <div className="w-full flex-1 max-w-xl md:mr-8 relative">
+          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input 
+            type="text" 
+            placeholder="What do you want to listen to?" 
+            className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-sm font-medium placeholder:text-gray-500"
+          />
+        </div>
+        <div className="flex items-center justify-end w-full md:w-auto gap-4 md:gap-6">
+          <h2 className="hidden lg:block text-xl font-bold text-gray-300 tracking-tight">
+            {greeting}{user ? `, ${user.username}` : ''}
+          </h2>
+          <ProfileMenu onEditProfile={() => setIsEditProfileOpen(true)} />
+        </div>
       </header>
 
       <EditProfileModal isOpen={isEditProfileOpen} onClose={() => setIsEditProfileOpen(false)} />
@@ -80,13 +99,7 @@ export const Home = () => {
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                     <button 
-                      onClick={() => playSong({
-                        id: song._id,
-                        title: song.title,
-                        artist: { name: song.artist?.name || 'Unknown Artist' },
-                        coverArtUrl: song.coverImage || song.coverArtUrl,
-                        audioUrl: song.audioUrl
-                      })}
+                      onClick={() => playQueue(mapToQueue(songs), idx)}
                       className="w-12 h-12 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:scale-105 hover:bg-pink-600 transition-all"
                     >
                       <FiPlay className="w-5 h-5 ml-1 fill-current" />
@@ -126,13 +139,7 @@ export const Home = () => {
                   <img src={song.coverImage || song.coverArtUrl} alt={song.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                     <button 
-                      onClick={() => playSong({
-                        id: song._id,
-                        title: song.title,
-                        artist: { name: song.artist?.name || 'Unknown Artist' },
-                        coverArtUrl: song.coverImage || song.coverArtUrl,
-                        audioUrl: song.audioUrl
-                      })}
+                      onClick={() => playQueue(mapToQueue([...songs].reverse()), idx)}
                       className="w-12 h-12 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:scale-105 hover:bg-pink-600 transition-all"
                     >
                       <FiPlay className="w-5 h-5 ml-1 fill-current" />

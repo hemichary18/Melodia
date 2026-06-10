@@ -85,7 +85,8 @@ export const Search = () => {
                       title: song.title,
                       artist: { name: song.artist?.name || 'Unknown Artist' },
                       coverArtUrl: song.coverImage || song.coverArtUrl,
-                      audioUrl: song.audioUrl
+                      audioUrl: song.audioUrl,
+                      lyrics: song.lyrics
                     })}
                     className="w-12 h-12 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:scale-105 hover:bg-pink-600 transition-all"
                   >

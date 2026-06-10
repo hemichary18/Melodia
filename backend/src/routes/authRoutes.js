@@ -1,0 +1,10 @@
+import express from 'express';
+import { registerUser, loginUser, logoutUser } from '../controllers/authController.js';
+import { googleLogin } from '../controllers/googleAuthController.js';
+const router = express.Router();
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.post('/logout', logoutUser);
+router.post('/google', googleLogin);
+export default router;
+//# sourceMappingURL=authRoutes.js.map

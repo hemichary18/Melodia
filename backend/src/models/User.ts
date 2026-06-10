@@ -22,6 +22,12 @@ export interface IUser extends Document {
     song: mongoose.Types.ObjectId;
     playedAt: Date;
   }[];
+  // --- New AI Ecosystem Fields ---
+  level: string;
+  points: number;
+  badges: string[];
+  communities: mongoose.Types.ObjectId[];
+  totalListeningSeconds: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,7 +47,12 @@ const UserSchema: Schema = new Schema({
   recentlyPlayed: [{
     song: { type: Schema.Types.ObjectId, ref: 'Song' },
     playedAt: { type: Date, default: Date.now }
-  }]
+  }],
+  level: { type: String, enum: ['Beginner', 'Explorer', 'Music Enthusiast', 'Audiophile', 'Legend'], default: 'Beginner' },
+  points: { type: Number, default: 0 },
+  badges: [{ type: String }],
+  communities: [{ type: Schema.Types.ObjectId, ref: 'Community' }],
+  totalListeningSeconds: { type: Number, default: 0 }
 }, {
   timestamps: true
 });

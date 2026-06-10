@@ -1,5 +1,5 @@
 import { useLocation, Link } from 'react-router-dom';
-import { FiHome, FiSearch, FiCompass, FiSettings, FiUploadCloud } from 'react-icons/fi';
+import { FiHome, FiSettings, FiUploadCloud, FiUsers, FiGrid } from 'react-icons/fi';
 import { BiLibrary } from 'react-icons/bi';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/useAuthStore';
@@ -10,9 +10,9 @@ export const Sidebar = () => {
 
   const navItems = [
     { name: 'Home', icon: FiHome, path: '/' },
-    { name: 'Explore', icon: FiCompass, path: '/explore' },
-    { name: 'Search', icon: FiSearch, path: '/search' },
     { name: 'Library', icon: BiLibrary, path: '/library' },
+    { name: 'Communities', icon: FiUsers, path: '/communities' },
+    { name: 'Modes', icon: FiGrid, path: '/modes' },
   ];
 
   return (

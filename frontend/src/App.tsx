@@ -6,10 +6,17 @@ import { Login } from './features/auth/Login';
 import { Register } from './features/auth/Register';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { Search } from './features/explore/Search';
 import { Library } from './features/library/Library';
 import { Settings } from './features/settings/Settings';
 import { IntroScreen } from './components/IntroScreen';
+import { SocialFeed } from './features/social/SocialFeed';
+import { Communities } from './features/social/Communities';
+import { MusicRoom } from './features/social/MusicRoom';
+import { FocusMode } from './features/modes/FocusMode';
+import { PartyMode } from './features/modes/PartyMode';
+import { DrivingMode } from './features/modes/DrivingMode';
+import { SleepMode } from './features/modes/SleepMode';
+import { ModesMenu } from './features/modes/ModesMenu';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -27,8 +34,6 @@ function App() {
               <AdminDashboard />
             </ProtectedRoute>
           } />
-          <Route path="/explore" element={<div className="p-8 text-white">Explore Page</div>} />
-          <Route path="/search" element={<Search />} />
           <Route path="/library" element={
             <ProtectedRoute>
               <Library />
@@ -39,7 +44,48 @@ function App() {
               <Settings />
             </ProtectedRoute>
           } />
+          <Route path="/social" element={
+            <ProtectedRoute>
+              <SocialFeed />
+            </ProtectedRoute>
+          } />
+          <Route path="/communities" element={
+            <ProtectedRoute>
+              <Communities />
+            </ProtectedRoute>
+          } />
+          <Route path="/room/:roomId" element={
+            <ProtectedRoute>
+              <MusicRoom />
+            </ProtectedRoute>
+          } />
+          <Route path="/modes" element={
+            <ProtectedRoute>
+              <ModesMenu />
+            </ProtectedRoute>
+          } />
         </Route>
+        {/* Fullscreen modes outside MainLayout */}
+        <Route path="/focus" element={
+          <ProtectedRoute>
+            <FocusMode />
+          </ProtectedRoute>
+        } />
+        <Route path="/party" element={
+          <ProtectedRoute>
+            <PartyMode />
+          </ProtectedRoute>
+        } />
+        <Route path="/driving" element={
+          <ProtectedRoute>
+            <DrivingMode />
+          </ProtectedRoute>
+        } />
+        <Route path="/sleep" element={
+          <ProtectedRoute>
+            <SleepMode />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );
