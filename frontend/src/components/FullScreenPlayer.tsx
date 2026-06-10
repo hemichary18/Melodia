@@ -15,7 +15,7 @@ interface FullScreenPlayerProps {
 }
 
 export const FullScreenPlayer = ({ isExpanded, onClose, initialViewMode = 'album' }: FullScreenPlayerProps) => {
-  const { currentSong, isPlaying, togglePlay, progress, duration, setProgress, playNext, playPrevious } = usePlayerStore();
+  const { currentSong, queue, isPlaying, togglePlay, progress, duration, setProgress, playNext, playPrevious } = usePlayerStore();
   const [viewMode, setViewMode] = useState<'album' | 'lyrics'>(initialViewMode);
   const [lyrics, setLyrics] = useState<ParsedLyric[]>([]);
   const activeLyricRef = useRef<HTMLDivElement>(null);
@@ -288,8 +288,9 @@ export const FullScreenPlayer = ({ isExpanded, onClose, initialViewMode = 'album
               {/* Main Controls */}
               <div className="flex items-center justify-center gap-6">
                 <button 
-                  onClick={playPrevious}
-                  className="text-white/60 hover:text-white transition-colors p-2"
+                  onClick={(e) => { e.stopPropagation(); playPrevious(); }}
+                  disabled={queue.length <= 1}
+                  className={`p-2 transition-colors ${queue.length <= 1 ? 'text-white/20 cursor-not-allowed' : 'text-white/60 hover:text-white'}`}
                 >
                   <FiSkipBack className="w-8 h-8 fill-current" />
                 </button>
@@ -311,8 +312,9 @@ export const FullScreenPlayer = ({ isExpanded, onClose, initialViewMode = 'album
                 </motion.button>
                 
                 <button 
-                  onClick={playNext}
-                  className="text-white/60 hover:text-white transition-colors p-2"
+                  onClick={(e) => { e.stopPropagation(); playNext(); }}
+                  disabled={queue.length <= 1}
+                  className={`p-2 transition-colors ${queue.length <= 1 ? 'text-white/20 cursor-not-allowed' : 'text-white/60 hover:text-white'}`}
                 >
                   <FiSkipForward className="w-8 h-8 fill-current" />
                 </button>

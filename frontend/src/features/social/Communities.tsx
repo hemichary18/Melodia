@@ -109,7 +109,7 @@ export const Communities = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {communities.map((community: any) => (
-            <div key={community._id} className="glass-card rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all group cursor-pointer relative">
+            <div key={community._id} onClick={() => navigate(`/room/${community._id}`)} className="glass-card rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all group cursor-pointer relative">
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10 pointer-events-none" />
               {community.coverImageUrl ? (
                 <img src={community.coverImageUrl} alt={community.name} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-700" />
@@ -166,7 +166,7 @@ export const Communities = () => {
       {/* Create Community Modal */}
       <AnimatePresence>
         {isCreateModalOpen && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 pb-32 bg-black/60 backdrop-blur-sm">
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

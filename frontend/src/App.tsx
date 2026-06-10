@@ -7,6 +7,7 @@ import { Register } from './features/auth/Register';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Library } from './features/library/Library';
+import { PlaylistView } from './features/library/PlaylistView';
 import { Settings } from './features/settings/Settings';
 import { IntroScreen } from './components/IntroScreen';
 import { SocialFeed } from './features/social/SocialFeed';
@@ -37,6 +38,11 @@ function App() {
           <Route path="/library" element={
             <ProtectedRoute>
               <Library />
+            </ProtectedRoute>
+          } />
+          <Route path="/playlist/:id" element={
+            <ProtectedRoute>
+              <PlaylistView />
             </ProtectedRoute>
           } />
           <Route path="/settings" element={

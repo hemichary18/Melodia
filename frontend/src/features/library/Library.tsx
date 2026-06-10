@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiPlay, FiHeart, FiPlus, FiMusic, FiX, FiTrash2, FiCheck } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export const Library = () => {
+  const navigate = useNavigate();
   const [songs, setSongs] = useState<any[]>([]); // liked songs
   const [playlists, setPlaylists] = useState<any[]>([]);
   const [allAvailableSongs, setAllAvailableSongs] = useState<any[]>([]);
@@ -201,11 +203,12 @@ export const Library = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
               key={playlist._id}
+              onClick={() => navigate(`/playlist/${playlist._id}`)}
               className="group relative glass-card p-4 hover:bg-white/5 transition-all duration-300 cursor-pointer"
             >
               <div className="relative aspect-square mb-4 overflow-hidden rounded-xl bg-white/5 flex items-center justify-center">
-                {playlist.songs.length > 0 && playlist.songs[0]?.coverImage ? (
-                  <img src={playlist.songs[0].coverImage} alt="Cover" className="object-cover w-full h-full" />
+                {playlist.songs.length > 0 && (playlist.songs[0]?.coverImage || playlist.songs[0]?.coverArtUrl) ? (
+                  <img src={playlist.songs[0].coverImage || playlist.songs[0].coverArtUrl} alt="Cover" className="object-cover w-full h-full" />
                 ) : (
                   <FiMusic className="w-12 h-12 text-gray-600" />
                 )}
@@ -239,7 +242,7 @@ export const Library = () => {
       {/* Create Playlist Modal */}
       <AnimatePresence>
         {isCreateModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pb-32 bg-black/60 backdrop-blur-sm">
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

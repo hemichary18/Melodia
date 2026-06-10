@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FullScreenPlayer } from './FullScreenPlayer';
 
 export const Player = () => {
-  const { currentSong, isPlaying, togglePlay, volume, setVolume, progress, duration, setProgress, setDuration, playNext, playPrevious } = usePlayerStore();
+  const { currentSong, queue, isPlaying, togglePlay, volume, setVolume, progress, duration, setProgress, setDuration, playNext, playPrevious } = usePlayerStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialViewMode, setInitialViewMode] = useState<'album' | 'lyrics'>('album');
@@ -129,20 +129,22 @@ export const Player = () => {
       <div className="flex flex-col items-center flex-1 max-w-2xl px-4 md:px-0">
           <div className="flex items-center gap-6 justify-center">
             <button 
-              onClick={playPrevious}
-              className="text-muted-foreground hover:text-foreground transition-colors group"
+              onClick={(e) => { e.stopPropagation(); playPrevious(); }}
+              disabled={queue.length <= 1}
+              className={`transition-colors group ${queue.length <= 1 ? 'text-gray-600 cursor-not-allowed' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <FiSkipBack className="w-5 h-5 group-active:scale-95 transition-transform" />
             </button>
             <button 
-              onClick={togglePlay}
+              onClick={(e) => { e.stopPropagation(); togglePlay(); }}
               className="w-10 h-10 bg-primary hover:bg-pink-600 text-primary-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 transition-all"
             >
               {isPlaying ? <FiPause className="w-5 h-5" /> : <FiPlay className="w-5 h-5 ml-1" />}
             </button>
             <button 
-              onClick={playNext}
-              className="text-muted-foreground hover:text-foreground transition-colors group"
+              onClick={(e) => { e.stopPropagation(); playNext(); }}
+              disabled={queue.length <= 1}
+              className={`transition-colors group ${queue.length <= 1 ? 'text-gray-600 cursor-not-allowed' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <FiSkipForward className="w-5 h-5 group-active:scale-95 transition-transform" />
             </button>

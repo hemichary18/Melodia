@@ -6,7 +6,7 @@ import { usePlayerStore } from '../../store/usePlayerStore';
 
 export const DrivingMode = () => {
   const navigate = useNavigate();
-  const { currentSong, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
+  const { currentSong, queue, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
   const [isListening, setIsListening] = useState(false);
   const controls = useAnimation();
 
@@ -54,8 +54,9 @@ export const DrivingMode = () => {
         {/* Massive Controls for Driving */}
         <div className="w-full max-w-3xl flex items-center justify-between gap-8 px-8">
           <button 
-            onClick={playPrevious}
-            className="flex-1 h-32 rounded-3xl bg-white/10 flex items-center justify-center text-white active:bg-white/20 transition-colors backdrop-blur-md border border-white/5"
+            onClick={(e) => { e.stopPropagation(); playPrevious(); }}
+            disabled={queue.length <= 1}
+            className={`flex-1 h-32 rounded-3xl flex items-center justify-center transition-colors backdrop-blur-md border border-white/5 ${queue.length <= 1 ? 'bg-white/5 text-white/20' : 'bg-white/10 text-white active:bg-white/20'}`}
           >
             <FiSkipBack className="w-12 h-12" />
           </button>
@@ -68,8 +69,9 @@ export const DrivingMode = () => {
           </button>
           
           <button 
-            onClick={playNext}
-            className="flex-1 h-32 rounded-3xl bg-white/10 flex items-center justify-center text-white active:bg-white/20 transition-colors backdrop-blur-md border border-white/5"
+            onClick={(e) => { e.stopPropagation(); playNext(); }}
+            disabled={queue.length <= 1}
+            className={`flex-1 h-32 rounded-3xl flex items-center justify-center transition-colors backdrop-blur-md border border-white/5 ${queue.length <= 1 ? 'bg-white/5 text-white/20' : 'bg-white/10 text-white active:bg-white/20'}`}
           >
             <FiSkipForward className="w-12 h-12" />
           </button>
