@@ -29,7 +29,7 @@ export const Library = () => {
       ]);
       setSongs(libraryRes.data || []);
       setPlaylists(playlistsRes.data || []);
-      setAllAvailableSongs(allSongsRes.data || []);
+      setAllAvailableSongs(allSongsRes.data.songs || []);
     } catch (error) {
       console.error('Failed to fetch data', error);
     } finally {
