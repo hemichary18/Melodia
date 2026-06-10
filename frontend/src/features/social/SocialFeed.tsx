@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { PostCard } from './components/PostCard';
 import { FiEdit3, FiImage, FiMusic, FiX } from 'react-icons/fi';
 import api from '../../services/api';

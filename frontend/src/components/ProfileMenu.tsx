@@ -15,7 +15,7 @@ export const ProfileMenu = ({ onEditProfile }: ProfileMenuProps) => {
   const [isDarkMode, setIsDarkMode] = useState(() => !document.documentElement.classList.contains('light'));
   const [showSleepTimer, setShowSleepTimer] = useState(false);
   const { user, logout } = useAuthStore();
-  const pause = usePlayerStore((state) => state.pause);
+  const setPlaying = (isPlaying: boolean) => usePlayerStore.setState({ isPlaying });
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -127,7 +127,7 @@ export const ProfileMenu = ({ onEditProfile }: ProfileMenuProps) => {
                     <button 
                       key={mins}
                       onClick={() => {
-                        setTimeout(() => pause(), mins * 60 * 1000);
+                        setTimeout(() => setPlaying(false), mins * 60 * 1000);
                         setShowSleepTimer(false);
                         setIsOpen(false);
                       }}

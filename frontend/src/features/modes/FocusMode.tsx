@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiClock, FiCoffee, FiBook, FiPlay, FiPause, FiRefreshCw, FiX } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiClock, FiCoffee, FiBook, FiPlay, FiPause, FiRefreshCw, FiX, FiHeadphones } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
 export const FocusMode = () => {
@@ -34,7 +34,7 @@ export const FocusMode = () => {
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((time) => time - 1);
@@ -170,5 +170,4 @@ export const FocusMode = () => {
   );
 };
 
-// Import missing icon
-import { FiHeadphones } from 'react-icons/fi';
+

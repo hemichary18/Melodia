@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
-import { FiMic, FiPlay, FiPause, FiSkipForward, FiSkipBack, FiMapPin, FiX, FiMusic } from 'react-icons/fi';
+import { FiMic, FiPlay, FiPause, FiSkipForward, FiSkipBack, FiMapPin, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
@@ -8,7 +8,6 @@ export const DrivingMode = () => {
   const navigate = useNavigate();
   const { currentSong, queue, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
   const [isListening, setIsListening] = useState(false);
-  const controls = useAnimation();
 
   // Simulated Voice Command Feedback
   useEffect(() => {

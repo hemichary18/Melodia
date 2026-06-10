@@ -19,7 +19,7 @@ export const Library = () => {
   const [newPlaylistTitle, setNewPlaylistTitle] = useState('');
   const [selectedSongIds, setSelectedSongIds] = useState<string[]>([]);
 
-  const { playQueue, playSong } = usePlayerStore();
+  const { playQueue } = usePlayerStore();
 
   const fetchData = async () => {
     setLoading(true);
@@ -47,7 +47,7 @@ export const Library = () => {
     e.preventDefault();
     if (!newPlaylistTitle.trim()) return;
     try {
-      const { data } = await api.post('/playlists', { 
+      await api.post('/playlists', { 
         title: newPlaylistTitle,
         songs: selectedSongIds 
       });

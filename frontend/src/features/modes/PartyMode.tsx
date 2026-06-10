@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiMusic, FiUsers, FiThumbsUp, FiThumbsDown, FiPlay, FiSkipForward, FiSettings, FiX } from 'react-icons/fi';
+import { FiMusic, FiUsers, FiThumbsUp, FiThumbsDown, FiPlay, FiSkipForward, FiSettings, FiX, FiPause } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useSocketStore } from '../../store/useSocketStore';
 import { useAuthStore } from '../../store/useAuthStore';
