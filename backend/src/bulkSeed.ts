@@ -78,7 +78,7 @@ async function runBulkSeed() {
       let coverImageUrl = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80';
       if (metadata.common.picture && metadata.common.picture.length > 0) {
         console.log(` -> Found embedded cover art, uploading to Cloudinary...`);
-        const coverBuffer = metadata.common.picture![0].data;
+        const coverBuffer = metadata.common.picture![0]!.data;
         coverImageUrl = await uploadToCloudinary(coverBuffer, 'image', `${title}-cover.jpg`);
       }
 
