@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiMic, FiPlay, FiPause, FiSkipForward, FiSkipBack, FiMapPin, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../../store/usePlayerStore';
