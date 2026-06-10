@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { FiUploadCloud, FiMusic, FiImage, FiCheckCircle, FiPlus, FiTrash2 } from 'react-icons/fi';
 import api from '../../services/api';
-import * as jsmediatags from 'jsmediatags';
+// @ts-ignore
+import jsmediatags from 'jsmediatags/dist/jsmediatags.min.js';
 
 interface SongUpload {
   id: string;
@@ -73,7 +74,7 @@ export const AdminDashboard = () => {
     updateSong(id, { audioFile: file });
     
     jsmediatags.read(file, {
-      onSuccess: function(tag) {
+      onSuccess: function(tag: any) {
         const tags = tag.tags;
         setSongs(prev => prev.map(s => {
           if (s.id !== id) return s;
@@ -97,7 +98,7 @@ export const AdminDashboard = () => {
           return { ...s, ...updates };
         }));
       },
-      onError: function(error) {
+      onError: function(error: any) {
         console.error('Failed to parse ID3 tags:', error);
       }
     });
