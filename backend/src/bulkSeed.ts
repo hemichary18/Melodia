@@ -16,10 +16,10 @@ const CLOUDINARY_CLOUD_NAME = 'dkpk3mdx4';
 const CLOUDINARY_UPLOAD_PRESET = 'Melodia';
 
 // Helper to upload Buffer to Cloudinary
-async function uploadToCloudinary(buffer: Buffer, resourceType: 'auto' | 'video' | 'image', filename: string): Promise<string> {
+async function uploadToCloudinary(buffer: Buffer | Uint8Array, resourceType: 'auto' | 'video' | 'image' | 'raw', filename: string): Promise<string> {
   const formData = new FormData();
   const mimeType = resourceType === 'image' ? 'image/jpeg' : 'audio/mpeg';
-  const blob = new Blob([buffer], { type: mimeType });
+  const blob = new Blob([buffer as any], { type: mimeType });
   
   formData.append('file', blob, filename);
   formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
@@ -78,7 +78,7 @@ async function runBulkSeed() {
       let coverImageUrl = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80';
       if (metadata.common.picture && metadata.common.picture.length > 0) {
         console.log(` -> Found embedded cover art, uploading to Cloudinary...`);
-        const coverBuffer = metadata.common.picture[0].data;
+        const coverBuffer = metadata.common.picture![0].data;
         coverImageUrl = await uploadToCloudinary(coverBuffer, 'image', `${title}-cover.jpg`);
       }
 
