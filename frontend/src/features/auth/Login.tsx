@@ -59,7 +59,7 @@ export const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6" autoComplete="off">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300 ml-1">Username</label>
             <div className="relative">
@@ -70,6 +70,7 @@ export const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
                 placeholder="Enter your username"
+                autoComplete="new-username"
                 required
               />
             </div>
@@ -85,6 +86,7 @@ export const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
                 placeholder="Enter your password"
+                autoComplete="new-password"
                 required
               />
             </div>
