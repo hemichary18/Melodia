@@ -21,6 +21,15 @@ import { SleepMode } from './features/modes/SleepMode';
 import { ModesMenu } from './features/modes/ModesMenu';
 import { GlobalAudio } from './components/GlobalAudio';
 
+import { Landing } from './features/landing/Landing';
+import { useAuthStore } from './store/useAuthStore';
+import { Navigate } from 'react-router-dom';
+
+const RootRoute = () => {
+  const { isAuthenticated } = useAuthStore();
+  return isAuthenticated ? <Navigate to="/home" replace /> : <Landing />;
+};
+
 function App() {
   const [showIntro, setShowIntro] = useState(true);
 
@@ -29,10 +38,15 @@ function App() {
       <GlobalAudio />
       {showIntro && <IntroScreen onComplete={() => setShowIntro(false)} />}
       <Routes>
+        <Route path="/" element={<RootRoute />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } />
           <Route path="/admin" element={
             <ProtectedRoute requireAdmin>
               <AdminDashboard />

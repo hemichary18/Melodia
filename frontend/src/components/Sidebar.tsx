@@ -9,7 +9,7 @@ export const Sidebar = () => {
   const { isAuthenticated, user } = useAuthStore();
 
   const navItems = [
-    { name: 'Home', icon: FiHome, path: '/' },
+    { name: 'Home', icon: FiHome, path: '/home' },
     { name: 'Search', icon: FiSearch, path: '/search' },
     { name: 'Library', icon: BiLibrary, path: '/library' },
     { name: 'Communities', icon: FiUsers, path: '/communities' },
