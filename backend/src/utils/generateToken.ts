@@ -12,8 +12,8 @@ export const generateToken = (res: Response, userId: mongoose.Types.ObjectId) =>
   // Set JWT as HTTP-Only cookie
   res.cookie('jwt', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production (required for sameSite 'none')
-    sameSite: process.env.NODE_ENV !== 'development' ? 'none' : 'lax', // Use 'none' in production for cross-origin, 'lax' for local
+    secure: true, // Always true for SameSite 'none'
+    sameSite: 'none', // Always 'none' to allow cross-origin requests from Vercel to Render
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
 

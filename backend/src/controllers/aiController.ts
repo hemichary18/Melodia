@@ -93,9 +93,43 @@ ${JSON.stringify(songCatalog, null, 2)}`;
     }
 
     // 5. Fetch the fully populated recommended songs
-    const recommendedSongs = await Song.find({ _id: { $in: recommendedIds } })
+    // Prevent Mongoose CastError if Gemini hallucinates invalid IDs
+    const validIds = recommendedIds.filter(id => {
+      try {
+        return /^[0-9a-fA-F]{24}$/.test(id);
+      } catch (err) {
+        return false;
+      }
+    });
+
+    const recommendedSongs = await Song.find({ _id: { $in: validIds } })
       .populate('artist', 'name bio image verified')
       .populate('album', 'title coverArtUrl');
+
+    // If Gemini hallucinated all invalid IDs, fallback to heuristic
+    if (recommendedSongs.length === 0 && mood) {
+       console.log('Gemini returned invalid IDs, falling back to local mock AI heuristic matching...');
+       const keywords = mood.toLowerCase().split(/\W+/);
+       
+       const scoredSongs = allSongs.map(song => {
+         let score = 0;
+         const searchableText = `${song.title} ${song.genre} ${(song.tags || []).join(' ')}`.toLowerCase();
+         keywords.forEach((kw: string) => {
+           if (kw.length > 2 && searchableText.includes(kw)) score += 2;
+         });
+         score += Math.random(); // slight random jitter
+         return { song, score };
+       });
+
+       scoredSongs.sort((a, b) => b.score - a.score);
+       const fallbackIds = scoredSongs.slice(0, 5).map(s => s.song._id);
+       
+       const fallbackSongs = await Song.find({ _id: { $in: fallbackIds } })
+         .populate('artist', 'name bio image verified')
+         .populate('album', 'title coverArtUrl');
+         
+       return res.json(fallbackSongs);
+    }
 
     res.json(recommendedSongs);
   } catch (error) {
