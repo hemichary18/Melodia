@@ -11,9 +11,12 @@ declare global {
 }
 
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
-  let token;
+  let token = req.cookies.jwt;
 
-  token = req.cookies.jwt;
+  // Fallback to Bearer token if cookie is blocked (e.g. third-party cookie restrictions)
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
 
   if (token) {
     try {

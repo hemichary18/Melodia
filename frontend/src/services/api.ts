@@ -10,4 +10,19 @@ const api = axios.create({
   withCredentials: true,
 });
 
+api.interceptors.request.use((config) => {
+  try {
+    const storageData = localStorage.getItem('auth-storage');
+    if (storageData) {
+      const { state } = JSON.parse(storageData);
+      if (state?.user?.token) {
+        config.headers.Authorization = `Bearer ${state.user.token}`;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to parse auth token from local storage', error);
+  }
+  return config;
+});
+
 export default api;

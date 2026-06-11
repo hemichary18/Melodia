@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { useSocketStore } from './useSocketStore';
 
 interface User {
@@ -7,6 +8,7 @@ interface User {
   email: string;
   role: string;
   profilePictureUrl?: string;
+  token?: string;
 }
 
 interface AuthState {
@@ -16,15 +18,22 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  isAuthenticated: false,
-  login: (userData) => {
-    set({ user: userData, isAuthenticated: true });
-    useSocketStore.getState().connect();
-  },
-  logout: () => {
-    set({ user: null, isAuthenticated: false });
-    useSocketStore.getState().disconnect();
-  },
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      login: (userData) => {
+        set({ user: userData, isAuthenticated: true });
+        useSocketStore.getState().connect();
+      },
+      logout: () => {
+        set({ user: null, isAuthenticated: false });
+        useSocketStore.getState().disconnect();
+      },
+    }),
+    {
+      name: 'auth-storage',
+    }
+  )
+);

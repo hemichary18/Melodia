@@ -27,12 +27,13 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     });
 
     if (user) {
-      generateToken(res, user._id as any);
+      const token = generateToken(res, user._id as any);
       res.status(201).json({
         _id: user._id,
         username: user.username,
         email: user.email,
         role: user.role,
+        token,
       });
     } else {
       res.status(400);
@@ -59,12 +60,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     });
 
     if (user && (await bcrypt.compare(password, user.passwordHash || ''))) {
-      generateToken(res, user._id as any);
+      const token = generateToken(res, user._id as any);
       res.json({
         _id: user._id,
         username: user.username,
         email: user.email,
         role: user.role,
+        token,
       });
     } else {
       res.status(401);
