@@ -34,11 +34,11 @@ export const DrivingMode = () => {
         <span className="text-xl font-medium tracking-wider">DRIVE MODE</span>
       </div>
 
-      <main className="flex-1 flex flex-col justify-center items-center p-12">
+      <main className="flex-1 flex flex-col justify-center items-center p-6 md:p-12">
         <motion.div 
           animate={isPlaying ? { scale: [1, 1.05, 1] } : { scale: 1 }}
           transition={{ duration: 3, repeat: Infinity }}
-          className="relative w-72 h-72 rounded-[3rem] overflow-hidden shadow-[0_0_80px_rgba(236,72,153,0.15)] mb-12"
+          className="relative w-48 h-48 md:w-72 md:h-72 rounded-3xl md:rounded-[3rem] overflow-hidden shadow-[0_0_80px_rgba(236,72,153,0.15)] mb-8 md:mb-12"
         >
           <img 
             src={currentSong?.coverArtUrl || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&h=800&fit=crop'} 
@@ -47,32 +47,32 @@ export const DrivingMode = () => {
           />
         </motion.div>
 
-        <h1 className="text-5xl font-black text-white mb-4 tracking-tighter text-center line-clamp-1">{currentSong?.title || 'No Song Playing'}</h1>
-        <p className="text-3xl text-gray-400 font-medium mb-16 text-center line-clamp-1">{currentSong?.artist?.name || 'Select a song from Library'}</p>
+        <h1 className="text-3xl md:text-5xl font-black text-white mb-2 md:mb-4 tracking-tighter text-center line-clamp-1 px-4">{currentSong?.title || 'No Song Playing'}</h1>
+        <p className="text-xl md:text-3xl text-gray-400 font-medium mb-8 md:mb-16 text-center line-clamp-1 px-4">{currentSong?.artist?.name || 'Select a song from Library'}</p>
 
         {/* Massive Controls for Driving */}
-        <div className="w-full max-w-3xl flex items-center justify-between gap-8 px-8">
+        <div className="w-full max-w-3xl flex items-center justify-between gap-4 md:gap-8 px-4 md:px-8">
           <button 
             onClick={(e) => { e.stopPropagation(); playPrevious(); }}
             disabled={queue.length <= 1}
-            className={`flex-1 h-32 rounded-3xl flex items-center justify-center transition-colors backdrop-blur-md border border-white/5 ${queue.length <= 1 ? 'bg-white/5 text-white/20' : 'bg-white/10 text-white active:bg-white/20'}`}
+            className={`flex-1 h-20 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center transition-colors backdrop-blur-md border border-white/5 ${queue.length <= 1 ? 'bg-white/5 text-white/20' : 'bg-white/10 text-white active:bg-white/20'}`}
           >
-            <FiSkipBack className="w-12 h-12" />
+            <FiSkipBack className="w-8 h-8 md:w-12 md:h-12" />
           </button>
           
           <button 
             onClick={togglePlay}
-            className="w-48 h-48 shrink-0 rounded-full bg-gradient-to-tr from-primary to-pink-500 flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_0_50px_rgba(236,72,153,0.3)]"
+            className="w-32 h-32 md:w-48 md:h-48 shrink-0 rounded-full bg-gradient-to-tr from-primary to-pink-500 flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_0_50px_rgba(236,72,153,0.3)]"
           >
-            {isPlaying ? <FiPause className="w-20 h-20" /> : <FiPlay className="w-20 h-20 ml-2" />}
+            {isPlaying ? <FiPause className="w-12 h-12 md:w-20 md:h-20" /> : <FiPlay className="w-12 h-12 md:w-20 md:h-20 ml-2" />}
           </button>
           
           <button 
             onClick={(e) => { e.stopPropagation(); playNext(); }}
             disabled={queue.length <= 1}
-            className={`flex-1 h-32 rounded-3xl flex items-center justify-center transition-colors backdrop-blur-md border border-white/5 ${queue.length <= 1 ? 'bg-white/5 text-white/20' : 'bg-white/10 text-white active:bg-white/20'}`}
+            className={`flex-1 h-20 md:h-32 rounded-2xl md:rounded-3xl flex items-center justify-center transition-colors backdrop-blur-md border border-white/5 ${queue.length <= 1 ? 'bg-white/5 text-white/20' : 'bg-white/10 text-white active:bg-white/20'}`}
           >
-            <FiSkipForward className="w-12 h-12" />
+            <FiSkipForward className="w-8 h-8 md:w-12 md:h-12" />
           </button>
         </div>
       </main>

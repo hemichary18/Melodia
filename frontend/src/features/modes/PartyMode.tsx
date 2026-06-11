@@ -97,18 +97,18 @@ export const PartyMode = () => {
         )}
       </header>
 
-      <main className="relative z-10 flex-1 flex overflow-hidden">
+      <main className="relative z-10 flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
         {/* Left: Player & Current Song */}
-        <div className="w-1/2 p-12 flex flex-col justify-center items-center border-r border-white/5">
+        <div className="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center items-center border-b lg:border-b-0 lg:border-r border-white/5 shrink-0">
            <motion.div 
              animate={isPlaying ? { scale: [1, 1.02, 1] } : { scale: 1 }}
              transition={{ duration: 2, repeat: Infinity }}
-             className="w-96 h-96 rounded-3xl shadow-[0_0_50px_rgba(236,72,153,0.3)] overflow-hidden mb-8 bg-white/5"
+             className="w-64 h-64 lg:w-96 lg:h-96 rounded-3xl shadow-[0_0_50px_rgba(236,72,153,0.3)] overflow-hidden mb-8 bg-white/5"
            >
              <img src={currentSong?.coverArtUrl || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&h=800&fit=crop"} alt="Now Playing" className="w-full h-full object-cover" />
            </motion.div>
-           <h2 className="text-4xl font-black text-white mb-2 tracking-tight line-clamp-1">{currentSong?.title || 'No Song Playing'}</h2>
-           <p className="text-xl text-gray-400 mb-10 line-clamp-1">{currentSong?.artist?.name || 'Waiting for host...'}</p>
+           <h2 className="text-3xl lg:text-4xl font-black text-white mb-2 tracking-tight line-clamp-1">{currentSong?.title || 'No Song Playing'}</h2>
+           <p className="text-lg lg:text-xl text-gray-400 mb-8 lg:mb-10 line-clamp-1">{currentSong?.artist?.name || 'Waiting for host...'}</p>
 
            {isHost && (
              <div className="flex items-center gap-6">
@@ -129,8 +129,8 @@ export const PartyMode = () => {
         </div>
 
         {/* Right: Collaborative Queue */}
-        <div className="w-1/2 p-8 flex flex-col">
-          <div className="mb-6">
+        <div className="w-full lg:w-1/2 p-6 lg:p-8 flex flex-col min-h-[500px]">
+          <div className="mb-6 relative">
             <h3 className="text-xl font-bold text-white mb-4">Up Next</h3>
             <input 
               type="text" 
@@ -142,7 +142,7 @@ export const PartyMode = () => {
             
             {/* Search Results */}
             {search && (
-              <div className="mt-2 bg-gray-900 rounded-xl border border-white/10 overflow-hidden absolute w-[calc(50%-4rem)] z-20">
+              <div className="mt-2 bg-gray-900 rounded-xl border border-white/10 overflow-hidden absolute top-full left-0 right-0 z-20 shadow-2xl">
                 {allSongs.filter(s => s.title.toLowerCase().includes(search.toLowerCase()) || (s.artist?.name || '').toLowerCase().includes(search.toLowerCase())).slice(0, 5).map(song => (
                   <div key={song._id} className="p-3 hover:bg-white/5 flex items-center justify-between cursor-pointer" onClick={() => addToQueue(song)}>
                     <div className="flex items-center gap-3">

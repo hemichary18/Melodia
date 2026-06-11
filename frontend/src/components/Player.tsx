@@ -1,49 +1,21 @@
 import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiVolume2, FiHeart, FiMic } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePlayerStore } from '../store/usePlayerStore';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { FullScreenPlayer } from './FullScreenPlayer';
 
 export const Player = () => {
-  const { currentSong, queue, isPlaying, togglePlay, volume, setVolume, progress, duration, setProgress, setDuration, playNext, playPrevious } = usePlayerStore();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { currentSong, queue, isPlaying, togglePlay, volume, setVolume, progress, duration, playNext, playPrevious, audioElement } = usePlayerStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialViewMode, setInitialViewMode] = useState<'album' | 'lyrics'>('album');
 
-  useEffect(() => {
-    if (currentSong && audioRef.current) {
-      if (audioRef.current.src !== currentSong.audioUrl) {
-        audioRef.current.src = currentSong.audioUrl;
-        setProgress(0);
-      }
-      if (isPlaying) {
-        audioRef.current.play().catch(e => console.error("Playback error:", e));
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  }, [currentSong, isPlaying]);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
-  }, [volume]);
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setProgress(audioRef.current.currentTime);
-      setDuration(audioRef.current.duration || 0);
-    }
-  };
-
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current) return;
+    if (!audioElement) return;
     const bounds = e.currentTarget.getBoundingClientRect();
     const percent = (e.clientX - bounds.left) / bounds.width;
     const newTime = percent * duration;
-    audioRef.current.currentTime = newTime;
-    setProgress(newTime);
+    audioElement.currentTime = newTime;
+    usePlayerStore.setState({ progress: newTime });
   };
 
   const handleVolume = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -63,12 +35,6 @@ export const Player = () => {
 
   return (
     <>
-      <audio 
-        ref={audioRef} 
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={() => usePlayerStore.setState({ isPlaying: false })}
-        onLoadedMetadata={handleTimeUpdate}
-      />
       <AnimatePresence>
         {!isExpanded && (
           <motion.div 

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import { MainLayout } from './layouts/MainLayout';
 import { Home } from './features/explore/Home';
+import { Search } from './features/explore/Search';
 import { Login } from './features/auth/Login';
 import { Register } from './features/auth/Register';
 import { AdminDashboard } from './features/admin/AdminDashboard';
@@ -18,12 +19,14 @@ import { PartyMode } from './features/modes/PartyMode';
 import { DrivingMode } from './features/modes/DrivingMode';
 import { SleepMode } from './features/modes/SleepMode';
 import { ModesMenu } from './features/modes/ModesMenu';
+import { GlobalAudio } from './components/GlobalAudio';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
 
   return (
     <Router>
+      <GlobalAudio />
       {showIntro && <IntroScreen onComplete={() => setShowIntro(false)} />}
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -63,6 +66,11 @@ function App() {
           <Route path="/room/:roomId" element={
             <ProtectedRoute>
               <MusicRoom />
+            </ProtectedRoute>
+          } />
+          <Route path="/search" element={
+            <ProtectedRoute>
+              <Search />
             </ProtectedRoute>
           } />
           <Route path="/modes" element={

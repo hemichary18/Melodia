@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiPlay, FiHeart, FiSearch } from 'react-icons/fi';
 // ... (I'll need to do this carefully, let's view Home.tsx first)
@@ -54,18 +55,32 @@ export const Home = () => {
     lyrics: song.lyrics
   }));
 
+  const navigate = useNavigate();
+
   return (
     <div className="p-4 md:p-8 pb-32 max-w-7xl mx-auto">
-      <header className="flex flex-col md:flex-row items-center justify-between gap-4 mb-12 sticky top-0 z-20 backdrop-blur-xl bg-background/80 -mx-4 md:-mx-8 px-4 md:px-8 py-4 border-b border-white/5">
-        <div className="w-full flex-1 max-w-xl md:mr-8 relative">
+      <header className="flex items-center justify-between gap-4 mb-12 sticky top-0 z-20 backdrop-blur-xl bg-background/80 -mx-4 md:-mx-8 px-4 md:px-8 py-4 border-b border-white/5">
+        {/* Mobile Logo */}
+        <div className="flex md:hidden items-center gap-2 flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-pink-500 flex items-center justify-center shadow-lg shadow-primary/20">
+            <svg className="w-4 h-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="flex-1 max-w-xl md:mr-8 relative">
           <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input 
             type="text" 
-            placeholder="What do you want to listen to?" 
-            className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-sm font-medium placeholder:text-gray-500"
+            readOnly
+            onClick={() => navigate('/search')}
+            placeholder="Search songs..." 
+            className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-sm font-medium placeholder:text-gray-500 cursor-text"
           />
         </div>
-        <div className="flex items-center justify-end w-full md:w-auto gap-4 md:gap-6">
+        
+        <div className="flex items-center justify-end flex-shrink-0 gap-4 md:gap-6">
           <h2 className="hidden lg:block text-xl font-bold text-gray-300 tracking-tight">
             {greeting}{user ? `, ${user.username}` : ''}
           </h2>

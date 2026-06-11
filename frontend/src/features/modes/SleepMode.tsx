@@ -10,9 +10,9 @@ export const SleepMode = () => {
   const [activeSound, setActiveSound] = useState('rain');
 
   const SOUNDS = [
-    { id: 'rain', label: 'Rain Drops', icon: FiCloudRain, url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_3d1a8775f0.mp3' },
-    { id: 'wind', label: 'Soft Wind', icon: FiWind, url: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_651a0b3294.mp3' },
-    { id: 'waves', label: 'Ocean Waves', icon: FiVolume2, url: 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8dd9b8b991.mp3' } // Using volume2 as a wave placeholder
+    { id: 'rain', label: 'Rain Drops', icon: FiCloudRain, url: 'https://actions.google.com/sounds/v1/water/rain_on_roof.ogg' },
+    { id: 'wind', label: 'Soft Wind', icon: FiWind, url: 'https://actions.google.com/sounds/v1/weather/strong_wind.ogg' },
+    { id: 'waves', label: 'Ocean Waves', icon: FiVolume2, url: 'https://actions.google.com/sounds/v1/water/ocean_waves_crashing.ogg' } 
   ];
 
   const audioRef = useRef<HTMLAudioElement | null>(null);

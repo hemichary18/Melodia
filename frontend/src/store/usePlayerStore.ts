@@ -26,6 +26,8 @@ interface PlayerState {
   setVolume: (volume: number) => void;
   setProgress: (progress: number) => void;
   setDuration: (duration: number) => void;
+  audioElement: HTMLAudioElement | null;
+  setAudioElement: (el: HTMLAudioElement | null) => void;
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
@@ -63,4 +65,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   setVolume: (volume) => set({ volume }),
   setProgress: (progress) => set({ progress }),
   setDuration: (duration) => set({ duration }),
+  audioElement: null,
+  setAudioElement: (el) => set({ audioElement: el }),
 }));
