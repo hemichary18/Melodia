@@ -1,129 +1,152 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import User from './models/User.js';
-import Artist from './models/Artist.js';
-import Album from './models/Album.js';
 import Song from './models/Song.js';
-import Playlist from './models/Playlist.js';
+import Artist from './models/Artist.js';
 
 dotenv.config();
 
-const connectDB = async () => {
-  try {
-    const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/melodia';
-    await mongoose.connect(uri);
-    console.log('MongoDB Connected to:', uri);
-  } catch (error: any) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+const dummySongs = [
+  {
+    title: 'Neon Nights',
+    genre: 'Electronic',
+    tags: ['energetic', 'dance', 'party', 'gym'],
+    duration: 210,
+    coverImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    artistName: 'Synthwave Kings'
+  },
+  {
+    title: 'Midnight Rain',
+    genre: 'Lo-Fi',
+    tags: ['sad', 'chill', 'rain', 'sleep', 'melancholy'],
+    duration: 180,
+    coverImage: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    artistName: 'Lofi Dreamer'
+  },
+  {
+    title: 'Morning Coffee',
+    genre: 'Acoustic',
+    tags: ['chill', 'morning', 'acoustic', 'focus', 'relax'],
+    duration: 150,
+    coverImage: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    artistName: 'Acoustic Soul'
+  },
+  {
+    title: 'Adrenaline Rush',
+    genre: 'Rock',
+    tags: ['energetic', 'gym', 'workout', 'rock', 'hype'],
+    duration: 240,
+    coverImage: 'https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+    artistName: 'The Invincibles'
+  },
+  {
+    title: 'Deep Focus',
+    genre: 'Ambient',
+    tags: ['focus', 'study', 'ambient', 'work', 'calm'],
+    duration: 300,
+    coverImage: 'https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+    artistName: 'Zen Masters'
+  },
+  {
+    title: 'Heartbreak Symphony',
+    genre: 'Classical',
+    tags: ['sad', 'cry', 'emotional', 'classical', 'melancholy'],
+    duration: 280,
+    coverImage: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+    artistName: 'Luna Strings'
+  },
+  {
+    title: 'Summer Vibes',
+    genre: 'Pop',
+    tags: ['happy', 'summer', 'pop', 'dance', 'upbeat'],
+    duration: 195,
+    coverImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
+    artistName: 'Sun Kisses'
+  },
+  {
+    title: 'Night Drive',
+    genre: 'Synthwave',
+    tags: ['chill', 'drive', 'night', 'focus', 'electronic'],
+    duration: 260,
+    coverImage: 'https://images.unsplash.com/photo-1517594422361-5e18a9949bb2?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+    artistName: 'Neon Riders'
+  },
+  {
+    title: 'Workout Anthem',
+    genre: 'Hip Hop',
+    tags: ['gym', 'workout', 'hype', 'energetic', 'rap'],
+    duration: 210,
+    coverImage: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
+    artistName: 'MC Iron'
+  },
+  {
+    title: 'Ocean Lullaby',
+    genre: 'Ambient',
+    tags: ['sleep', 'relax', 'ocean', 'calm', 'peaceful'],
+    duration: 320,
+    coverImage: 'https://images.unsplash.com/photo-1498623116890-37e912163d5d?w=500&auto=format&fit=crop&q=60',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
+    artistName: 'Sleep Sounds'
   }
-};
+];
 
-const seedData = async () => {
+const seedDatabase = async () => {
   try {
-    await connectDB();
+    const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/melodia';
+    await mongoose.connect(mongoUri);
+    console.log('MongoDB connected successfully');
 
-    console.log('Clearing old data and indexes...');
-    await Artist.collection.drop().catch(() => {});
-    await Album.collection.drop().catch(() => {});
-    await Song.collection.drop().catch(() => {});
-    await Playlist.collection.drop().catch(() => {});
-    // Intentionally not clearing Users so you keep your login!
-
-    console.log('Creating artists...');
-    const theWeeknd = await Artist.create({
-      name: 'The Weeknd',
-      bio: 'Canadian singer, songwriter, and record producer.',
-      image: 'https://images.unsplash.com/photo-1549834125-82d3c48159a3?q=80&w=400&h=400&fit=crop',
-      verified: true,
-      followers: 1500000,
-    }) as any;
-
-    const daftPunk = await Artist.create({
-      name: 'Daft Punk',
-      bio: 'French electronic music duo.',
-      image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400&h=400&fit=crop',
-      verified: true,
-      followers: 2000000,
-    }) as any;
-
-    console.log('Creating albums...');
-    const starboy = await Album.create({
-      title: 'Starboy',
-      artist: theWeeknd._id,
-      coverArtUrl: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400&h=400&fit=crop',
-      releaseDate: new Date('2016-01-01')
-    }) as any;
-
-    const discovery = await Album.create({
-      title: 'Discovery',
-      artist: daftPunk._id,
-      coverArtUrl: 'https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=400&h=400&fit=crop',
-      releaseDate: new Date('2001-01-01')
-    }) as any;
-
-    console.log('Creating songs...');
-    await Song.insertMany([
-      {
-        title: 'Starboy',
-        artist: theWeeknd._id,
-        album: starboy._id,
-        genre: 'R&B',
-        duration: 230,
-        coverImage: starboy.coverArtUrl,
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Placeholder audio
-        isTrending: true,
-        tags: ['rnb', 'pop'],
-        playCount: 150000,
-        likesCount: 10000,
-      },
-      {
-        title: 'I Feel It Coming',
-        artist: theWeeknd._id,
-        album: starboy._id,
-        genre: 'R&B',
-        duration: 269,
-        coverImage: starboy.coverArtUrl,
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', // Placeholder audio
-        isTrending: true,
-        tags: ['rnb', 'electronic'],
-        playCount: 120000,
-        likesCount: 8000,
-      },
-      {
-        title: 'One More Time',
-        artist: daftPunk._id,
-        album: discovery._id,
-        genre: 'Electronic',
-        duration: 320,
-        coverImage: discovery.coverArtUrl,
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', // Placeholder audio
-        isTrending: false,
-        tags: ['dance', 'electronic', 'house'],
-        playCount: 500000,
-        likesCount: 45000,
-      },
-      {
-        title: 'Harder, Better, Faster, Stronger',
-        artist: daftPunk._id,
-        album: discovery._id,
-        genre: 'Electronic',
-        duration: 224,
-        coverImage: discovery.coverArtUrl,
-        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', // Placeholder audio
-        isTrending: true,
-        tags: ['dance', 'electronic', 'house', 'workout'],
-        playCount: 800000,
-        likesCount: 65000,
+    // Wipe existing dummy artists and songs
+    console.log('Clearing existing dummy songs...');
+    const existingSongs = await Song.find({});
+    
+    // Create Artists and Songs
+    for (const item of dummySongs) {
+      let artist = await Artist.findOne({ name: item.artistName });
+      
+      if (!artist) {
+        artist = await Artist.create({
+          name: item.artistName,
+          bio: `Auto-generated dummy artist for ${item.genre}`,
+          image: item.coverImage,
+          verified: true,
+          followers: Math.floor(Math.random() * 10000)
+        });
+        console.log(`Created artist: ${artist.name}`);
       }
-    ]);
 
-    console.log('Data Imported Successfully!');
+      // Check if song already exists to avoid duplicates
+      const songExists = await Song.findOne({ title: item.title, artist: artist._id });
+      if (!songExists) {
+        await Song.create({
+          title: item.title,
+          artist: artist._id,
+          genre: item.genre,
+          duration: item.duration,
+          coverImage: item.coverImage,
+          audioUrl: item.audioUrl,
+          tags: item.tags
+        });
+        console.log(`Created song: ${item.title}`);
+      } else {
+        console.log(`Song already exists: ${item.title}`);
+      }
+    }
+
+    console.log('Seeding complete! 🎵');
     process.exit();
   } catch (error) {
-    console.error('Error importing data:', error);
+    console.error('Seeding failed:', error);
     process.exit(1);
   }
 };
 
-seedData();
+seedDatabase();

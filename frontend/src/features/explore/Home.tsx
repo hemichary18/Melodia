@@ -15,6 +15,11 @@ export const Home = () => {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [songs, setSongs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // AI Recommender State
+  const [moodInput, setMoodInput] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiRecommendations, setAiRecommendations] = useState<any[]>([]);
   
   useEffect(() => {
     const fetchSongs = async () => {
@@ -37,6 +42,20 @@ export const Home = () => {
       // Visual feedback can be added later or we can fetch liked state
     } catch (error) {
       console.error('Failed to toggle like', error);
+    }
+  };
+
+  const handleGetRecommendations = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!moodInput.trim()) return;
+    setAiLoading(true);
+    try {
+      const { data } = await api.post('/ai/recommend', { mood: moodInput });
+      setAiRecommendations(data);
+    } catch (error) {
+      console.error('AI Recommendation failed', error);
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -139,40 +158,103 @@ export const Home = () => {
       </section>
 
       {!loading && songs.length > 0 && (
-        <section>
-          <h3 className="text-xl font-bold text-white mb-6 text-gradient">Made For You</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {[...songs].reverse().map((song, idx) => (
-              <motion.div
-                key={`made-${song._id}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                className="glass-card p-4 rounded-2xl group cursor-pointer hover:bg-white/10 transition-all"
-              >
-                <div className="relative aspect-square mb-4 overflow-hidden rounded-xl">
-                  <img src={song.coverImage || song.coverArtUrl} alt={song.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                    <button 
-                      onClick={() => playQueue(mapToQueue([...songs].reverse()), idx)}
-                      className="w-12 h-12 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:scale-105 hover:bg-pink-600 transition-all"
-                    >
-                      <FiPlay className="w-5 h-5 ml-1 fill-current" />
-                    </button>
-                  </div>
-                </div>
-                <button 
-                  onClick={(e) => toggleLike(song._id, e)}
-                  className="absolute top-2 right-2 p-2 bg-black/40 backdrop-blur-md rounded-full text-pink-500 hover:scale-110 transition-transform opacity-0 group-hover:opacity-100 z-10"
+        <>
+          {/* AI Mood Matcher Section */}
+          <section className="mb-12">
+            <div className="glass-card rounded-3xl p-6 md:p-8 bg-gradient-to-br from-primary/10 to-indigo-900/20 border border-white/10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
+              
+              <div className="relative z-10">
+                <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="text-2xl">✨</span> AI DJ Matcher
+                </h3>
+                <p className="text-gray-400 mb-6 max-w-lg">Tell me how you're feeling, and I'll build the perfect playlist from your library instantly.</p>
+                
+                <form onSubmit={handleGetRecommendations} className="flex flex-col sm:flex-row gap-4 mb-8">
+                  <input 
+                    type="text" 
+                    value={moodInput}
+                    onChange={(e) => setMoodInput(e.target.value)}
+                    placeholder="e.g., I'm feeling energetic and want to dance!"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-500"
+                  />
+                  <button 
+                    type="submit"
+                    disabled={!moodInput.trim() || aiLoading}
+                    className="bg-primary hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-primary/20 whitespace-nowrap flex items-center justify-center min-w-[140px]"
+                  >
+                    {aiLoading ? (
+                      <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    ) : (
+                      'Generate ✨'
+                    )}
+                  </button>
+                </form>
+
+                {/* Recommendations Results */}
+                {aiRecommendations.length > 0 && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                  >
+                    {aiRecommendations.map((song, idx) => (
+                      <div key={song._id} className="group relative bg-black/40 rounded-xl p-3 hover:bg-white/10 transition-colors cursor-pointer border border-white/5">
+                        <div className="relative aspect-square mb-3 overflow-hidden rounded-lg">
+                          <img src={song.coverImage || song.coverArtUrl} className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500" />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                            <button 
+                              onClick={(e) => { e.preventDefault(); playQueue(mapToQueue(aiRecommendations), idx); }}
+                              className="w-10 h-10 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-all"
+                            >
+                              <FiPlay className="w-4 h-4 ml-1 fill-current" />
+                            </button>
+                          </div>
+                        </div>
+                        <h4 className="font-semibold text-white truncate text-sm">{song.title}</h4>
+                        <p className="text-xs text-gray-400 truncate">{song.artist?.name}</p>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </section>
+          <section>
+            <h3 className="text-xl font-bold text-white mb-6 text-gradient">Made For You</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {[...songs].reverse().map((song, idx) => (
+                <motion.div
+                  key={`made-${song._id}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="glass-card p-4 rounded-2xl group cursor-pointer hover:bg-white/10 transition-all"
                 >
-                  <FiHeart className="w-5 h-5 fill-current" />
-                </button>
-                <h4 className="font-semibold text-white truncate">{song.title}</h4>
-                <p className="text-sm text-gray-400 truncate mt-1">{song.artist?.name || 'Unknown Artist'}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+                  <div className="relative aspect-square mb-4 overflow-hidden rounded-xl">
+                    <img src={song.coverImage || song.coverArtUrl} alt={song.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                      <button 
+                        onClick={() => playQueue(mapToQueue([...songs].reverse()), idx)}
+                        className="w-12 h-12 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:scale-105 hover:bg-pink-600 transition-all"
+                      >
+                        <FiPlay className="w-5 h-5 ml-1 fill-current" />
+                      </button>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={(e) => toggleLike(song._id, e)}
+                    className="absolute top-2 right-2 p-2 bg-black/40 backdrop-blur-md rounded-full text-pink-500 hover:scale-110 transition-transform opacity-0 group-hover:opacity-100 z-10"
+                  >
+                    <FiHeart className="w-5 h-5 fill-current" />
+                  </button>
+                  <h4 className="font-semibold text-white truncate">{song.title}</h4>
+                  <p className="text-sm text-gray-400 truncate mt-1">{song.artist?.name || 'Unknown Artist'}</p>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </div>
   );

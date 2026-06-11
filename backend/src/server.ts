@@ -13,6 +13,7 @@ import songRoutes from './routes/songRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import socialRoutes from './routes/socialRoutes.js';
 import playlistRoutes from './routes/playlistRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use('/api/artists', artistRoutes);
 app.use('/api/songs', songRoutes);
 app.use('/api/social', socialRoutes);
 app.use('/api/playlists', playlistRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Error Middleware
 app.use(notFound);

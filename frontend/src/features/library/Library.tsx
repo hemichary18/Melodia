@@ -24,16 +24,20 @@ export const Library = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [libraryRes, playlistsRes, allSongsRes] = await Promise.all([
-        api.get('/users/library'),
-        api.get('/playlists'),
-        api.get('/songs')
-      ]);
-      setSongs(libraryRes.data || []);
-      setPlaylists(playlistsRes.data || []);
-      setAllAvailableSongs(allSongsRes.data.songs || []);
-    } catch (error) {
-      console.error('Failed to fetch data', error);
+      try {
+        const libraryRes = await api.get('/users/library');
+        setSongs(libraryRes.data || []);
+      } catch (err) { console.error('Failed to fetch library', err); }
+
+      try {
+        const playlistsRes = await api.get('/playlists');
+        setPlaylists(playlistsRes.data || []);
+      } catch (err) { console.error('Failed to fetch playlists', err); }
+
+      try {
+        const allSongsRes = await api.get('/songs');
+        setAllAvailableSongs(allSongsRes.data.songs || []);
+      } catch (err) { console.error('Failed to fetch all songs', err); }
     } finally {
       setLoading(false);
     }
@@ -281,7 +285,7 @@ export const Library = () => {
                         className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${selectedSongIds.includes(song._id) ? 'bg-primary/20 border border-primary/30' : 'hover:bg-white/5 border border-transparent'}`}
                       >
                         <div className="flex items-center gap-3 overflow-hidden">
-                          <img src={song.coverImage} className="w-10 h-10 rounded-md object-cover" alt="" />
+                          <img src={song.coverImage || song.coverArtUrl} className="w-10 h-10 rounded-md object-cover" alt="" />
                           <div className="truncate">
                             <p className="text-white text-sm font-medium truncate">{song.title}</p>
                             <p className="text-gray-400 text-xs truncate">{song.artist?.name}</p>
