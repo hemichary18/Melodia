@@ -81,7 +81,7 @@ ${JSON.stringify(songCatalog, null, 2)}`;
        const scoredSongs = allSongs.map(song => {
          let score = 0;
          const searchableText = `${song.title} ${song.genre} ${(song.tags || []).join(' ')}`.toLowerCase();
-         keywords.forEach(kw => {
+         keywords.forEach((kw: string) => {
            if (kw.length > 2 && searchableText.includes(kw)) score += 2;
          });
          score += Math.random(); // slight random jitter
